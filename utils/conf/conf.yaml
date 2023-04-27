@@ -1,0 +1,21 @@
+redis:
+  host: 127.0.0.1:6379
+  user: ""
+  password: ""
+
+mysql:
+  dsn: root:@tcp(127.0.0.1:3306)/gin_api?charset=utf8mb4&parseTime=True&loc=Local
+  prefix: ""
+
+app:
+  run_mode: debug #release(gin.ReleaseMode ) test(gin.TestMode) debug(gin.DebugMode )
+
+jwt:
+  secret: Jw19f1KF2A11AcHf1e21MF #jwt的secret
+  expire: 3 #过期时间3小时
+
+logger:
+  file_path: "runtime/"
+
+openai:
+  token: ""
