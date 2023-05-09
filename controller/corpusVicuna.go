@@ -66,7 +66,7 @@ func AddCorpusVicuna(ctx *gin.Context) {
 	body["input"] = corpus
 
 	requestion := &res{}
-	httpStatus := curl.Post("https://api.openai.com/v1/embeddings", body, header, requestion)
+	httpStatus := curl.Post("http://region-9.seetacloud.com:41584/v1/create_embeddings", body, header, requestion)
 
 	if httpStatus != http.StatusOK {
 		logger.Error("查询失败")
