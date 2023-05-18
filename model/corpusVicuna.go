@@ -45,6 +45,16 @@ func (*CorpusVicuna) Add(corpus *CorpusVicuna) uint32 {
 	return corpus.Id
 }
 
+func (*CorpusVicuna) One(d, c *CorpusVicuna) {
+	db := global.DataBase.Where(d).First(&c)
+
+	if db.Error != nil {
+		fmt.Println(db.Error.Error())
+	}
+
+	return
+}
+
 func (*CorpusVicuna) Update(corpus *CorpusVicuna, update map[string]interface{}) bool {
 	db := global.DataBase.Model(&CorpusVicuna{}).Where(corpus).Updates(update)
 

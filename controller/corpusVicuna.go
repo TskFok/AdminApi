@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/TskFok/AdminApi/global"
 	"github.com/TskFok/AdminApi/model"
 	"github.com/TskFok/AdminApi/utils/cache"
@@ -11,21 +12,6 @@ import (
 	"net/http"
 	"strconv"
 )
-
-type resVicuna struct {
-	Object string `json:"object,omitempty"`
-	Data   []struct {
-		Object    string    `json:"object,omitempty"`
-		Index     int       `json:"index,omitempty"`
-		Embedding []float64 `json:"embedding,omitempty"`
-	} `json:"data,omitempty"`
-	Model string `json:"model,omitempty"`
-	Usage struct {
-		PromptTokens int `json:"prompt_tokens,omitempty"`
-		TotalTokens  int `json:"total_tokens,omitempty"`
-	} `json:"usage"`
-	Corpus string
-}
 
 func CorpusVicunaDetail(ctx *gin.Context) {
 	id := ctx.DefaultQuery("id", "0")
@@ -116,8 +102,6 @@ func AddCorpusVicuna(ctx *gin.Context) {
 	corpusModel.Pid = uint32(p)
 	id := corpusModel.Add(corpusModel)
 
-	i := strconv.Itoa(int(id))
-
 	ctx.JSON(http.StatusOK, gin.H{
 		"id": id,
 	})
@@ -125,13 +109,14 @@ func AddCorpusVicuna(ctx *gin.Context) {
 	cacheInfo := make(map[string]interface{})
 	cacheInfo["corpus"] = corpus
 	cacheInfo["data"] = requestion.Data[0].Embedding
+	cacheInfo["pid"] = p
 
 	bd, err := json.Marshal(cacheInfo)
 	if err != nil {
 		logger.Error(err.Error())
 	}
 
-	cache.Set("embeding_new:"+i, string(bd), -1)
+	cache.Set(fmt.Sprintf("embeding_new:%d:%d", p, id), string(bd), -1)
 
 }
 
@@ -179,6 +164,9 @@ func UpdateCorpusVicuna(ctx *gin.Context) {
 	corpusModel := &model.CorpusVicuna{}
 	corpusModel.Id = uint32(i)
 
+	one := &model.CorpusVicuna{}
+	corpusModel.One(corpusModel, one)
+
 	update := make(map[string]interface{})
 	update["corpus"] = corpus
 	update["data"] = string(b)
@@ -195,13 +183,14 @@ func UpdateCorpusVicuna(ctx *gin.Context) {
 	cacheInfo := make(map[string]interface{})
 	cacheInfo["corpus"] = corpus
 	cacheInfo["data"] = requestion.Data[0].Embedding
+	cacheInfo["pid"] = one.Pid
 
 	bd, err := json.Marshal(cacheInfo)
 	if err != nil {
 		logger.Error(err.Error())
 	}
 
-	cache.Set("embeding_new:"+id, string(bd), -1)
+	cache.Set(fmt.Sprintf("embeding_new:%d:%d", one.Pid, i), string(bd), -1)
 }
 
 func DelCorpusVicuna(ctx *gin.Context) {
@@ -225,6 +214,9 @@ func DelCorpusVicuna(ctx *gin.Context) {
 	corpusModel := &model.CorpusVicuna{}
 	corpusModel.Id = uint32(i)
 
+	one := &model.CorpusVicuna{}
+	corpusModel.One(corpusModel, one)
+
 	res := corpusModel.Delete()
 
 	if !res {
@@ -233,5 +225,5 @@ func DelCorpusVicuna(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, "删除成功")
-	cache.Del("embeding_new:" + id)
+	cache.Del(fmt.Sprintf("embeding_new:%d:%d", one.Pid, i))
 }
