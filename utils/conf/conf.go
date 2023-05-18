@@ -29,4 +29,5 @@ func InitConfig() {
 	global.JwtExpire = viper.Get("jwt.expire").(int)
 	global.LoggerFilePath = viper.Get("logger.file_path").(string)
 	global.OpenAiToken = viper.Get("openai.token").(string)
+	global.VicunaUrl = viper.Get("vicuna.url").(string)
 }

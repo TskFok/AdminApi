@@ -19,3 +19,4 @@ var DataBase *gorm.DB
 var LoggerFilePath string
 var LoggerClient *zap.SugaredLogger
 var OpenAiToken string
+var VicunaUrl string

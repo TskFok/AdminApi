@@ -16,6 +16,7 @@ jwt:
 
 logger:
   file_path: "runtime/"
-
+vicuna:
+  url: "http://*********"
 openai:
   token: ""

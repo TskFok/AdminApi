@@ -31,6 +31,8 @@ func Post(url string, body interface{}, header http.Header, responseBody any) in
 
 	if err != nil {
 		fmt.Println(err.Error())
+
+		return 0
 	}
 
 	if rep.StatusCode == http.StatusOK {

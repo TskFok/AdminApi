@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"github.com/TskFok/AdminApi/global"
 	"github.com/TskFok/AdminApi/model"
 	"github.com/TskFok/AdminApi/utils/cache"
 	"github.com/TskFok/AdminApi/utils/curl"
@@ -64,7 +65,7 @@ func AddCorpusVicuna(ctx *gin.Context) {
 	body["input"] = corpus
 
 	requestion := &res{}
-	httpStatus := curl.Post("http://region-9.seetacloud.com:41584/v1/embeddings", body, header, requestion)
+	httpStatus := curl.Post(global.VicunaUrl+"/embeddings", body, header, requestion)
 
 	if httpStatus != http.StatusOK {
 		logger.Error("查询失败")
@@ -129,7 +130,7 @@ func UpdateCorpusVicuna(ctx *gin.Context) {
 	body["input"] = corpus
 
 	requestion := &res{}
-	httpStatus := curl.Post("http://region-9.seetacloud.com:41584/v1/embeddings", body, header, requestion)
+	httpStatus := curl.Post(global.VicunaUrl+"/embeddings", body, header, requestion)
 
 	if httpStatus != http.StatusOK {
 		logger.Error("查询失败")
