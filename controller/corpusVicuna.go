@@ -110,6 +110,7 @@ func AddCorpusVicuna(ctx *gin.Context) {
 	cacheInfo["corpus"] = corpus
 	cacheInfo["data"] = requestion.Data[0].Embedding
 	cacheInfo["pid"] = p
+	cacheInfo["id"] = id
 
 	bd, err := json.Marshal(cacheInfo)
 	if err != nil {
@@ -184,6 +185,7 @@ func UpdateCorpusVicuna(ctx *gin.Context) {
 	cacheInfo["corpus"] = corpus
 	cacheInfo["data"] = requestion.Data[0].Embedding
 	cacheInfo["pid"] = one.Pid
+	cacheInfo["id"] = i
 
 	bd, err := json.Marshal(cacheInfo)
 	if err != nil {
