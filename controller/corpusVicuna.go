@@ -27,6 +27,24 @@ type resVicuna struct {
 	Corpus string
 }
 
+func CorpusVicunaDetail(ctx *gin.Context) {
+	id := ctx.DefaultQuery("id", "0")
+
+	if id == "" {
+		ctx.JSON(http.StatusBadRequest, "错误的id")
+		return
+	}
+
+	condition := make(map[string]interface{})
+	condition["pid"] = id
+
+	m := &model.CorpusVicuna{}
+	list := m.Detail(condition)
+
+	ctx.JSON(http.StatusOK, list)
+	return
+}
+
 func CorpusVicunaList(ctx *gin.Context) {
 	page := ctx.DefaultQuery("page", "1")
 	size := ctx.DefaultQuery("size", "10")
@@ -45,14 +63,25 @@ func CorpusVicunaList(ctx *gin.Context) {
 
 	corpus := &model.CorpusVicuna{}
 
-	ctx.JSON(http.StatusOK, corpus.List(pg, sz))
+	condition := make(map[string]interface{})
+	condition["pid"] = 0
+
+	ctx.JSON(http.StatusOK, corpus.List(condition, pg, sz))
 }
 
 func AddCorpusVicuna(ctx *gin.Context) {
 	corpus := ctx.DefaultPostForm("corpus", "")
+	pid := ctx.DefaultPostForm("pid", "0")
 
 	if corpus == "" {
 		ctx.JSON(http.StatusBadRequest, "请输入语料")
+		return
+	}
+
+	p, err := strconv.Atoi(pid)
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -84,6 +113,7 @@ func AddCorpusVicuna(ctx *gin.Context) {
 	corpusModel := &model.CorpusVicuna{}
 	corpusModel.Data = string(b)
 	corpusModel.Corpus = corpus
+	corpusModel.Pid = uint32(p)
 	id := corpusModel.Add(corpusModel)
 
 	i := strconv.Itoa(int(id))

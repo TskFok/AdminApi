@@ -34,4 +34,6 @@ func InitRouter() {
 	Handle.POST("/corpus-vicuna", controller.AddCorpusVicuna)
 	Handle.PUT("/corpus-vicuna", controller.UpdateCorpusVicuna)
 	Handle.DELETE("/corpus-vicuna/:id", controller.DelCorpusVicuna)
+
+	Handle.GET("/corpus-vicuna/detail", controller.CorpusVicunaDetail)
 }
